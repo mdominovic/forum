@@ -21,7 +21,10 @@ Route::get('/discuss', function () {
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/forum', [
+    'uses' => 'ForumsController@index',
+    'as' => 'forum'
+]);
 
 
 Route::group(['middleware' => 'auth'], function(){
