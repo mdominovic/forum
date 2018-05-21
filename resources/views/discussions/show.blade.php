@@ -38,9 +38,37 @@
             </div>
             <div class="panel-footer">
                 <p>
-                    LIKE
+                    @if($r->is_liked_by_auth_user())
+                        <a href="{{{ route('reply.unlike', ['id' => $r->id ]) }}}" class="btn btn-danger btn-xs">Unlike <span class="badge">{{ $r->likes->count() }}</span></a>
+
+                    @else
+                        <a href="{{ route('reply.like', ['id' => $r->id ]) }}" class="btn btn-success btn-xs">Like <span class="badge">{{ $r->likes->count() }}</span></a>
+                    @endif
                 </p>
             </div>
         </div>
     @endforeach
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            @if(Auth::check())
+                <form action="{{ route('discussion.reply', ['id' => $d->id]) }}" method="post">
+                    {{ csrf_field() }}
+
+                    <div class="form-group">
+                        <label for="reply">Leave a reply...</label>
+                        <textarea name="reply" id="reply" cols="30" rows="10" class="form-control"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <button class="btn pull-right">Leave a reply</button>
+                    </div>
+                </form>
+            @else
+                <div class="text-center">
+                    <h2>Sign in to leave a reply</h2>
+                </div>
+            @endif
+        </div>
+    </div>
 @endsection
