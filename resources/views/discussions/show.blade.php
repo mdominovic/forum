@@ -5,10 +5,17 @@
         <div class="panel-heading">
             <img src="{{ $d->user->avatar }}" alt="" width="40px" height="40px">&nbsp;&nbsp;&nbsp;
             <span>{{ $d->user->name }}, <b>{{ $d->created_at->diffForHumans() }}</b></span>
-            @if($d->is_being_watched_by_auth_user())
-                <a href="{{ route('discussion.unwatch', ['id' => $d->id ]) }}" class="btn btn-default btn-xs pull-right">unwatch</a>
+
+            @if($d->hasBestAnswer())
+                <span class="btn btn pull-right btn-danger btn-xs">closed</span>
             @else
-                <a href="{{ route('discussion.watch', ['id' => $d->id ]) }}" class="btn btn-default btn-xs pull-right">watch</a>
+                <span class="btn btn pull-right btn-success btn-xs">open</span>
+            @endif
+
+            @if($d->is_being_watched_by_auth_user())
+                <a href="{{ route('discussion.unwatch', ['id' => $d->id ]) }}" class="btn btn-default btn-xs pull-right" style="margin-right: 8px;">unwatch</a>
+            @else
+                <a href="{{ route('discussion.watch', ['id' => $d->id ]) }}" class="btn btn-default btn-xs pull-right" style="margin-right: 8px;">watch</a>
             @endif
         </div>
 
@@ -20,6 +27,24 @@
             <p class="text-center">
                 {{ $d->content }}
             </p>
+
+            <hr>
+
+            @if($best_answer)
+                <div class="text-center" style="padding: 40px;">
+                    <h3 class="text-center">BEST ANSWER</h3>
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <img src="{{ $best_answer->user->avatar }}" alt="" width="40px" height="40px">&nbsp;&nbsp;&nbsp;
+                            <span>{{ $best_answer->user->name }}, <b>{{ $d->created_at->diffForHumans() }}</b></span>
+                        </div>
+
+                        <div class="panel-body">
+                            {{ $best_answer->content }}
+                        </div>
+                    </div>
+                </div>
+            @endif
         </div>
         <div class="panel-footer">
                 <span>
@@ -34,6 +59,11 @@
             <div class="panel-heading">
                 <img src="{{ $r->user->avatar }}" alt="" width="40px" height="40px">&nbsp;&nbsp;&nbsp;
                 <span>{{ $r->user->name }}, <b>{{ $r->created_at->diffForHumans() }}</b></span>
+                @if(!$best_answer)
+                    @if(Auth::id() == $d->user->id)
+                        <a href="{{ route('discussion.best.answer', ['id' => $r->id ]) }}" class="bt btn-xs btn-info pull-right">Mark as best answer</a>
+                    @endif
+                @endif
             </div>
 
             <div class="panel-body">

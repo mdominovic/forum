@@ -12,6 +12,8 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+
 </head>
 <body>
     <div id="app">
@@ -71,6 +73,22 @@
             </div>
         </nav>
 
+
+            @if($errors->count() > 0)
+                <ul class="list-group-item">
+                    @foreach($errors->all() as $error)
+                        <li class="list-group-item text-danger">
+                            {{ $error }}
+                        </li>
+                    @endforeach
+                </ul>
+
+            <br>
+            <br>
+            <br>
+            @endif
+
+
         <div class="container">
             <div class="col-md-4">
                 <a href="{{ route('discussions.create') }}" class="form-control btn btn-primary">Create a new discussion</a>
@@ -85,6 +103,15 @@
                         <ul class="list-group">
                             <li class="list-group-item">
                                 <a href="/forum" style="text-decoration: none">Home</a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="/forum?filter=me" style="text-decoration: none">My discussions</a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="/forum?filter=solved" style="text-decoration: none">Solved discussions</a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="/forum?filter=unsolved" style="text-decoration: none">Unsolved discussions</a>
                             </li>
                         </ul>
                     </div>
@@ -113,5 +140,11 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script>
+        @if(Session::has('success'))
+            toastr.success('{{ Session::get('success') }}')
+        @endif
+    </script>
 </body>
 </html>
