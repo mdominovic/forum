@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-
+use Auth;
 use Illuminate\Http\Request;
 use App\Channel;
 use Session;
@@ -10,6 +10,15 @@ use Session;
 
 class ChannelsController extends Controller
 {
+    /**
+     * ChannelsController constructor.
+     */
+    public function __construct()
+    {
+        $this->middleware('admin');
+    }
+
+
     /**
      * Display a listing of the resource.
      *
